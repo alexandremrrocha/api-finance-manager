@@ -1,15 +1,15 @@
-module.exports = {
-    test: {
-        client: '',
-        version: '',
-        connection: {
-            host: '',
-            user: '',
-            password: '',
-            database: ''
-        }
+export default {
+  test: {
+    client: '',
+    version: '',
+    connection: {
+      host: '',
+      user: '',
+      password: '',
+      database: ''
     },
     migrations: {
-        directory: ''
+      directory: ''
     }
-}
+  }
+};

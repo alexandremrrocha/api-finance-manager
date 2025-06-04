@@ -1,6 +1,11 @@
-import express, { Application } from "express";
+import express from "express";
+import knex from "knex";
+import knexfile from "../knexfile";
 
-const app: Application = express();
+const app: any = express();
+
+//TODO: criar chaveamento dinamico
+app.db = knex(knexfile.test)
 
 const consign = require('consign');
 
@@ -10,7 +15,7 @@ consign({cwd: 'src', verbose: false})
     .then('./config/routes.ts')
     .into(app);
 
-app.get('/', (req, res) => {
+app.get('/', (req: any, res: any) => {
     res.status(200).send();
 })
 

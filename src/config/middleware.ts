@@ -1,7 +1,6 @@
 import bodyParser from 'body-parser';
-import { Application } from 'express';
 
-module.exports = (app: Application) =>{
+module.exports = (app: any) =>{
     app.use(bodyParser.json());
 };
  
