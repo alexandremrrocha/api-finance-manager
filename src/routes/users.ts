@@ -1,6 +1,6 @@
 module.exports = (app: any) =>{
-    const findAll = async (req: any, res: any)  =>{
-        const result: any[] = await app.services.user.findAll();
+    const getUsers = async (req: any, res: any)  =>{
+        const result: any[] = await app.services.user.findUsers();
         res.status(200).json(result); 
     };
 
@@ -11,6 +11,6 @@ module.exports = (app: any) =>{
         }
         res.status(201).json(result[0]);
     }
-    return {findAll, createUser};
+    return {getUsers, createUser};
 }
 

@@ -38,6 +38,13 @@ test(`Shouldn't insert users without a password`, async () =>{
     expect(res.body.error).toBe('Senha é um atributo obrigatório')      
 });
 
+test(`Shouldn't insert users with existing email addresses`, async () =>{
+    const res = await request(app).post('/users')
+        .send({name: 'Walter Mitty', email, password: '123456'});
+    expect(res.status).toBe(400);
+    expect(res.body.error).toBe('Já existe um usuário com esse email');
+});
+
 afterAll(async () => {
   await app.db.destroy(); 
 });

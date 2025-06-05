@@ -1,9 +1,9 @@
 module.exports = (app: any) =>{
-    const findAll = () =>{
-        return app.db('users').select();
+    const findUsers = (filter = {}) =>{
+        return app.db('users').where(filter).select();
     };
     
-    const saveUser = (user: any) =>{
+    const saveUser = async (user: any) =>{
         if(!user.name){
             return {error: 'Nome é um atributo obrigatório'};
         }    
@@ -12,9 +12,15 @@ module.exports = (app: any) =>{
         }  
         if(!user.email){
             return {error: 'Email é um atributo obrigatório'};
-        }         
+        }
+        
+        const userDb = await findUsers({email: user.email}); 
+        if(userDb && userDb.length > 0){
+            return {error: 'Já existe um usuário com esse email'}
+        }
+        
         return app.db('users').insert(user, '*');
     };
 
-    return {findAll, saveUser};
+    return {findUsers, saveUser};
 }
