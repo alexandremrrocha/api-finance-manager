@@ -5,5 +5,9 @@ module.exports = (app: any) =>{
 
     app.route('/accounts')
         .get(app.routes.accounts.getAll)
-        .post(app.routes.accounts.createAcount)
+        .post(app.routes.accounts.createAcount);
+
+    app.route('/accounts/:id')
+        .get(app.routes.accounts.getById);
+        
 }

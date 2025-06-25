@@ -23,6 +23,14 @@ test('Should list all accounts', async () =>{
     expect(res.body.length).toBeGreaterThan(0);
 });
 
+test('Should return a account for Id', async () =>{
+    const resultInsert = await app.db('accounts').insert({name: 'Acc by id', user_id: user.id}, ['id']);
+    const res = await request(app).get(`${MAIN_ROUTE}/${resultInsert[0].id}`);
+    expect(res.status).toBe(200);
+    expect(res.body.name).toBe('Acc by id');
+    expect(res.body.user_id).toBe(user.id);
+});
+
 afterAll(async () => {
   await app.db.destroy(); 
 });

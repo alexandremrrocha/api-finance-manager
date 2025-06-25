@@ -5,7 +5,11 @@ module.exports = (app: any) =>{
 
     const getAll = () =>{
         return app.db('accounts');
-    }
+    };
 
-    return {saveAccount, getAll}
+    const find = (filter = {}) =>{
+        return app.db('accounts').where(filter).first();
+    };
+
+    return {saveAccount, getAll, find}
 }
