@@ -16,6 +16,13 @@ test('Should insert account with success', async () =>{
     expect(res.body.name).toBe('#Account 1');
 });
 
+test('Should list all accounts', async () =>{
+    await app.db('accounts').insert({name: 'Acc list', user_id: user.id});
+    const res = await request(app).get(MAIN_ROUTE);
+    expect(res.status).toBe(200);
+    expect(res.body.length).toBeGreaterThan(0);
+});
+
 afterAll(async () => {
   await app.db.destroy(); 
 });
