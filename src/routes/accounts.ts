@@ -14,5 +14,10 @@ module.exports = (app: any) =>{
         return res.status(200).json(result);
     };
 
-    return {createAcount, getAll, getById};
+    const updateById = async (req: any, res: any) =>{
+        const result = await app.services.account.updateById(req.params.id, req.body);
+        return res.status(200).json(result[0]);
+    };
+
+    return {createAcount, getAll, getById, updateById};
 } 

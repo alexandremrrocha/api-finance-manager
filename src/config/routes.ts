@@ -8,6 +8,7 @@ module.exports = (app: any) =>{
         .post(app.routes.accounts.createAcount);
 
     app.route('/accounts/:id')
-        .get(app.routes.accounts.getById);
+        .get(app.routes.accounts.getById)
+        .put(app.routes.accounts.updateById);
         
 }

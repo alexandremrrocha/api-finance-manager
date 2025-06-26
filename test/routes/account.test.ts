@@ -31,6 +31,14 @@ test('Should return a account for Id', async () =>{
     expect(res.body.user_id).toBe(user.id);
 });
 
+test('Should alter an account', async () =>{
+    const insertAccount = await app.db('accounts').insert({name: 'Acc to Update', user_id: user.id}, ['id']);    
+    const updateAccount = await request(app).put(`${MAIN_ROUTE}/${insertAccount[0].id}`)  
+        .send({name: 'Acc Updated'});    
+    expect(updateAccount.status).toBe(200);
+    expect(updateAccount.body.name).toBe('Acc Updated');
+});
+
 afterAll(async () => {
   await app.db.destroy(); 
 });
