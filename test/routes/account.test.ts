@@ -16,12 +16,22 @@ test('Should insert account with success', async () =>{
     expect(res.body.name).toBe('#Account 1');
 });
 
+test('It shouldnt insert an account without a name', async() =>{
+    const res = await request(app).post(MAIN_ROUTE).send({user_id: user.id});
+    expect(res.status).toBe(400);
+    expect(res.body.error).toBe('Nome é um atributo obrigatório');
+});
+
+test.skip('It shouldnt insert an account with duplicate name for the same user', async () =>{});
+
 test('Should list all accounts', async () =>{
     await app.db('accounts').insert({name: 'Acc list', user_id: user.id});
     const res = await request(app).get(MAIN_ROUTE);
     expect(res.status).toBe(200);
     expect(res.body.length).toBeGreaterThan(0);
 });
+
+test.skip('It should list just the user account', async () =>{});
 
 test('Should return a account for Id', async () =>{
     const resultInsert = await app.db('accounts').insert({name: 'Acc by id', user_id: user.id}, ['id']);
@@ -31,6 +41,8 @@ test('Should return a account for Id', async () =>{
     expect(res.body.user_id).toBe(user.id);
 });
 
+test.skip('It shouldnt return an account of another user', async () =>{});
+
 test('Should alter an account', async () =>{
     const insertAccount = await app.db('accounts').insert({name: 'Acc to Update', user_id: user.id}, ['id']);    
     const updateAccount = await request(app).put(`${MAIN_ROUTE}/${insertAccount[0].id}`)  
@@ -39,11 +51,15 @@ test('Should alter an account', async () =>{
     expect(updateAccount.body.name).toBe('Acc Updated');
 });
 
+test.skip('It shouldnt alter an account of another user', async () =>{});
+
 test('It should delete an account', async () =>{
     const insertAccount = await app.db('accounts').insert({name: 'Acc to Delete', user_id: user.id}, ['id']);
     const deleteAccount = await request(app).delete(`${MAIN_ROUTE}/${insertAccount[0].id}`);
     expect(deleteAccount.status).toBe(204);
 });
+
+test.skip('It shouldnt delete an account of another user', async () =>{});
 
 afterAll(async () => {
   await app.db.destroy(); 
