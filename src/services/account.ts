@@ -15,5 +15,9 @@ module.exports = (app: any) =>{
         return app.db('accounts').where({id}).update(account, '*');
     };
 
-    return {saveAccount, getAll, find, updateById}
+    const removeById = (id: any) =>{
+        return app.db('accounts').where({id}).delete();
+    };
+
+    return {saveAccount, getAll, find, updateById, removeById}
 }

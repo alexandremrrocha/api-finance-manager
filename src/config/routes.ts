@@ -9,6 +9,7 @@ module.exports = (app: any) =>{
 
     app.route('/accounts/:id')
         .get(app.routes.accounts.getById)
-        .put(app.routes.accounts.updateById);
+        .put(app.routes.accounts.updateById)
+        .delete(app.routes.accounts.removeById);
         
 }

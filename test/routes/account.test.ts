@@ -39,6 +39,12 @@ test('Should alter an account', async () =>{
     expect(updateAccount.body.name).toBe('Acc Updated');
 });
 
+test('It should delete an account', async () =>{
+    const insertAccount = await app.db('accounts').insert({name: 'Acc to Delete', user_id: user.id}, ['id']);
+    const deleteAccount = await request(app).delete(`${MAIN_ROUTE}/${insertAccount[0].id}`);
+    expect(deleteAccount.status).toBe(204);
+});
+
 afterAll(async () => {
   await app.db.destroy(); 
 });
