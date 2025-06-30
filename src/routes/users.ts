@@ -5,12 +5,14 @@ module.exports = (app: any) =>{
     };
 
     const createUser = async (req: any, res: any) =>{
-        const result = await app.services.user.saveUser(req.body);
-        if(result.error){
-            return res.status(400).json(result);
-        }
-        res.status(201).json(result[0]);
+        try {
+            const result = await app.services.user.saveUser(req.body);
+            res.status(201).json(result[0]);
+        } catch (error: any) {
+            return res.status(400).json({error: error.message});
+        }            
     }
+    
     return {getUsers, createUser};
 }
 

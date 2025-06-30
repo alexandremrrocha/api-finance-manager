@@ -1,11 +1,12 @@
 module.exports = (app: any) =>{
 
     const createAcount = async (req: any, res: any) =>{
-        const result = await app.services.account.saveAccount(req.body);  
-        if(result.error){
-            return res.status(400).json(result);
+        try {
+            const result = await app.services.account.saveAccount(req.body);
+            return res.status(201).json(result[0]);      
+        } catch (error: any) {
+            return res.status(400).json({error: error.message});
         }
-        return res.status(201).json(result[0]);         
     }
 
     const getAll = async (req: any, res: any) =>{
