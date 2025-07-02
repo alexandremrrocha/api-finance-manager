@@ -4,12 +4,12 @@ module.exports = (app: any) =>{
         res.status(200).json(result); 
     };
 
-    const createUser = async (req: any, res: any) =>{
+    const createUser = async (req: any, res: any, next: any) =>{
         try {
             const result = await app.services.user.saveUser(req.body);
             res.status(201).json(result[0]);
         } catch (error: any) {
-            return res.status(400).json({error: error.message});
+            next(error);;
         }            
     }
     

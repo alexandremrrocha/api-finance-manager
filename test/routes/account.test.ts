@@ -18,8 +18,8 @@ test('Should insert account with success', async () =>{
 
 test('It shouldnt insert an account without a name', async() =>{
     const res = await request(app).post(MAIN_ROUTE).send({user_id: user.id});
-    expect(res.status).toBe(400);
-    expect(res.body.error).toBe('Nome é um atributo obrigatório');
+    expect(res.status).toBe(500);
+    expect(res.body.message).toBe('Nome é um atributo obrigatório');
 });
 
 test.skip('It shouldnt insert an account with duplicate name for the same user', async () =>{});
