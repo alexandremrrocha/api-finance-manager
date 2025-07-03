@@ -1,6 +1,6 @@
 module.exports = (app: any) =>{
     const getUsers = async (req: any, res: any)  =>{
-        const result: any[] = await app.services.user.findUsers();
+        const result: any[] = await app.services.user.findAll();
         res.status(200).json(result); 
     };
 
@@ -9,7 +9,7 @@ module.exports = (app: any) =>{
             const result = await app.services.user.saveUser(req.body);
             res.status(201).json(result[0]);
         } catch (error: any) {
-            next(error);;
+            next(error);
         }            
     }
     

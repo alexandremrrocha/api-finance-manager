@@ -15,6 +15,18 @@ test('Should insert users with sucess', async () =>{
         .send({name: 'Walter Mitty', email, password: '123456'});
     expect(res.status).toBe(201);
     expect(res.body.name).toBe('Walter Mitty');
+    expect(res.body).not.toHaveProperty('password');
+});
+
+test('Should insert encrypted password', async () =>{ 
+    const res = await request(app).post('/users')
+        .send({name: 'Walter Mitty', email: `${Date.now()}@email.com`, password: '123456'});
+    expect(res.status).toBe(201);
+
+    const {id} = res.body;
+    const userDb = await app.services.user.findUser({id});
+    expect(userDb.password).not.toBeUndefined();
+    expect(userDb.password).not.toBe('123456');
 });
 
 test(`Shouldn't insert users without a name`, async () =>{

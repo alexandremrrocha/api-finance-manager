@@ -1,7 +1,18 @@
+const bcrypt = require('bcrypt-node');
+
 module.exports = (app: any) =>{
-    const findUsers = (filter = {}) =>{
-        return app.db('users').where(filter).select();
+    const findAll = () =>{
+        return app.db('users').select(['id', 'name', 'email']);
     };
+
+    const findUser = (filter = {}) =>{
+        return app.db('users').where(filter).first();
+    };
+
+    const getPasswordHash = (password: string) =>{
+        const salt = bcrypt.genSaltSync(10);
+        return bcrypt.hashSync(password, salt);
+    }
     
     const saveUser = async (user: any) =>{
         if(!user.name){
@@ -14,13 +25,15 @@ module.exports = (app: any) =>{
              throw new Error('Email é um atributo obrigatório');
         }
         
-        const userDb = await findUsers({email: user.email}); 
-        if(userDb && userDb.length > 0){
+        const userDb = await findUser({email: user.email}); 
+        if(userDb){
              throw new Error('Já existe um usuário com esse email');
         }
         
-        return app.db('users').insert(user, '*');
+        user.password = getPasswordHash(user.password);
+
+        return app.db('users').insert(user, ['id', 'name', 'email']);
     };
 
-    return {findUsers, saveUser};
+    return {findUser, saveUser, findAll};
 }

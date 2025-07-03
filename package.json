@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@types/express": "^5.0.2",
+    "bcrypt-node": "^0.1.0",
     "body-parser": "^2.2.0",
     "consign": "^0.1.6",
     "express": "^5.1.0",
