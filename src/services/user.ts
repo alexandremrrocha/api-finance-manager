@@ -1,4 +1,4 @@
-const bcrypt = require('bcrypt-node');
+import bcrypt from 'bcrypt';
 
 module.exports = (app: any) =>{
     const findAll = () =>{
@@ -30,9 +30,9 @@ module.exports = (app: any) =>{
              throw new Error('Já existe um usuário com esse email');
         }
         
-        user.password = getPasswordHash(user.password);
-
-        return app.db('users').insert(user, ['id', 'name', 'email']);
+        const newUser = {...user};
+        newUser.password = getPasswordHash(user.password);
+        return app.db('users').insert(newUser, ['id', 'name', 'email']);
     };
 
     return {findUser, saveUser, findAll};

@@ -1,4 +1,6 @@
 module.exports = (app: any) =>{
+    app.route('/auth/signin').post(app.routes.auth.signin);
+
     app.route('/users')
         .get(app.routes.users.getUsers)
         .post(app.routes.users.createUser);
