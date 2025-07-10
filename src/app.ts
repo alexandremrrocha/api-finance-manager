@@ -10,7 +10,8 @@ app.db = knex(knexfile.test)
 const consign = require('consign');
 
 consign({cwd: 'src', verbose: false})
-    .include('./config/middleware.ts')
+    .include('./config/passport.ts')
+    .then('./config/middleware.ts')
     .then('./services')
     .then('./routes')
     .then('./config/routes.ts')

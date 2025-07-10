@@ -1,6 +1,5 @@
 import app from '../src/app';
-
-const request = require ('supertest');
+import request from 'supertest';
 
 test('Should respond on the root', async () => {
   const res = await request(app).get('/');

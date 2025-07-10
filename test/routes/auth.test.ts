@@ -1,6 +1,5 @@
 import app from '../../src/app';
-
-const request = require('supertest');
+import request from 'supertest';
 
 test('Should receive token to login', async() =>{
     const payload: Record<string, any> = {
@@ -32,6 +31,11 @@ test('Shouldnt authenticate user who doesnt exist', async () => {
     const res = await request(app).post('/auth/signin').send({email: 'nãoExiste@email.com', password: '654321'});
     expect(res.status).toBe(500);
     expect(res.body.message).toBe('Usuário ou senha incorreta');
+});
+
+test('Shouldnt access a protected route without a token', async () =>{
+  const res = await request(app).get('/users');
+  expect(res.status).toBe(401);
 });
 
 afterAll(async () => {

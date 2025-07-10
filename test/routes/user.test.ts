@@ -1,6 +1,6 @@
 import app from '../../src/app';
+import request from 'supertest';
 
-const request = require('supertest');
 const email: string = `${Date.now()}@email.com`;
 
 test('Should list all users', async () =>{

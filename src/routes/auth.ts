@@ -1,4 +1,4 @@
-const jwt = require ('jwt-simple');
+import * as jwt from 'jwt-simple';
 import bcrypt from 'bcrypt';
 
 const secret = 'textoseguro'

@@ -1,6 +1,5 @@
 import app from '../../src/app';
-
-const request = require('supertest');
+import request from 'supertest';
 
 const MAIN_ROUTE: string = '/accounts';
 let user: any;
