@@ -15,6 +15,25 @@ test('Should receive token to login', async() =>{
     expect(res.body).toHaveProperty('token');
 });
 
+test('Shouldnt authenticate user with wrong password', async () => {
+  const payload: Record<string, any> = {
+        name: 'Walter',
+        email: `${Date.now()}@email.com`,
+        password: '123456'
+    };
+    
+    await app.services.user.saveUser(payload);
+    const res = await request(app).post('/auth/signin').send({email: payload.email, password: '654321'});
+    expect(res.status).toBe(500);
+    expect(res.body.message).toBe('Usuário ou senha incorreta');
+});
+
+test('Shouldnt authenticate user who doesnt exist', async () => {      
+    const res = await request(app).post('/auth/signin').send({email: 'nãoExiste@email.com', password: '654321'});
+    expect(res.status).toBe(500);
+    expect(res.body.message).toBe('Usuário ou senha incorreta');
+});
+
 afterAll(async () => {
   await app.db.destroy(); 
 });
