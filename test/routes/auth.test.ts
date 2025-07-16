@@ -1,6 +1,14 @@
 import app from '../../src/app';
 import request from 'supertest';
 
+test('Should create a user through signup', async () =>{
+  const res = await request(app).post('/auth/signup').send({ name: 'Walter', email: `${Date.now()}@email.com`, password: '123456'});
+  expect(res.status).toBe(201);
+  expect(res.body.name).toBe('Walter');
+  expect(res.body).toHaveProperty('email');
+  expect(res.body).not.toHaveProperty('password');
+});
+
 test('Should receive token to login', async() =>{
     const payload: Record<string, any> = {
         name: 'Walter',
