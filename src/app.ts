@@ -14,7 +14,7 @@ consign({cwd: 'src', verbose: false})
     .then('./config/middleware.ts')
     .then('./services')
     .then('./routes')
-    .then('./config/routes.ts')
+    .then('./config/router.ts')
     .into(app);
 
 app.get('/', (req: any, res: any) => {

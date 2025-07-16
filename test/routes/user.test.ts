@@ -2,6 +2,7 @@ import app from '../../src/app';
 import request from 'supertest';
 import * as jwt from 'jwt-simple';
 
+const MAIN_ROUTE: string = '/v1/users';
 const email: string = `${Date.now()}@email.com`;
 
 let user: any;
@@ -12,13 +13,13 @@ beforeAll(async () =>{
 });
 
 test('Should list all users', async () =>{
-    const res = await request(app).get('/users').set('authorization', `bearer ${user.token}`);
+    const res = await request(app).get(MAIN_ROUTE).set('authorization', `bearer ${user.token}`);
     expect(res.status).toBe(200);
     expect(res.body.length).toBeGreaterThan(0);    
 });
 
 test('Should insert users with sucess', async () =>{    
-    const res = await request(app).post('/users')
+    const res = await request(app).post(MAIN_ROUTE)
         .send({name: 'Walter Mitty', email, password: '123456'})
         .set('authorization', `bearer ${user.token}`);
     expect(res.status).toBe(201);
@@ -27,7 +28,7 @@ test('Should insert users with sucess', async () =>{
 });
 
 test('Should insert encrypted password', async () =>{ 
-    const res = await request(app).post('/users')
+    const res = await request(app).post(MAIN_ROUTE)
         .send({name: 'Walter Mitty', email: `${Date.now()}@email.com`, password: '123456'})
         .set('authorization', `bearer ${user.token}`);
     expect(res.status).toBe(201);
@@ -39,7 +40,7 @@ test('Should insert encrypted password', async () =>{
 });
 
 test(`Shouldn't insert users without a name`, async () =>{
-    const res = await request(app).post('/users')
+    const res = await request(app).post(MAIN_ROUTE)
         .send({email, password:'testeSemNome'})
         .set('authorization', `bearer ${user.token}`);
     expect(res.status).toBe(500);
@@ -47,7 +48,7 @@ test(`Shouldn't insert users without a name`, async () =>{
 });
 
 test(`Shouldn't insert users without a email`, async () =>{
-    const res = await request(app).post('/users')
+    const res = await request(app).post(MAIN_ROUTE)
         .send({name: 'Walter Mitty', password: '123456'})
         .set('authorization', `bearer ${user.token}`);
     expect(res.status).toBe(500);
@@ -55,7 +56,7 @@ test(`Shouldn't insert users without a email`, async () =>{
 });
 
 test(`Shouldn't insert users without a password`, async () =>{
-    const res = await request(app).post('/users')
+    const res = await request(app).post(MAIN_ROUTE)
         .send({name: 'Walter Mitty', email})
         .set('authorization', `bearer ${user.token}`);
     expect(res.status).toBe(500);
@@ -63,7 +64,7 @@ test(`Shouldn't insert users without a password`, async () =>{
 });
 
 test(`Shouldn't insert users with existing email addresses`, async () =>{
-    const res = await request(app).post('/users')
+    const res = await request(app).post(MAIN_ROUTE)
         .send({name: 'Walter Mitty', email, password: '123456'})
         .set('authorization', `bearer ${user.token}`);
     expect(res.status).toBe(500);

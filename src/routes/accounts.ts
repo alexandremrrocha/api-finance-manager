@@ -1,49 +1,52 @@
-module.exports = (app: any) =>{
+import express from "express";
 
-    const createAcount = async (req: any, res: any, next: any) =>{
+module.exports = (app: any) =>{
+    const router = express.Router();
+
+    router.post('/', async (req: any, res: any, next: any) =>{
         try {
             const result = await app.services.account.saveAccount(req.body);
             return res.status(201).json(result[0]);      
         } catch (error: any) {
             next(error);
         }
-    }
+    });
 
-    const getAll = async (req: any, res: any, next: any) =>{
+    router.get('/', async (req: any, res: any, next: any) =>{
         try {
             const result = await app.services.account.getAll();
             return res.status(200).json(result);
         } catch (error) {
             next(error);
         }
-    };
+    });
 
-    const getById = async (req: any, res: any, next: any) =>{
+    router.get('/:id', async (req: any, res: any, next: any) =>{
          try {
             const result = await app.services.account.find({id: req.params.id});
             return res.status(200).json(result);
         } catch (error) {
             next(error);
         }        
-    };
+    });
 
-    const updateById = async (req: any, res: any, next: any) =>{
+    router.put('/:id', async (req: any, res: any, next: any) =>{
          try {
             const result = await app.services.account.updateById(req.params.id, req.body);
             return res.status(200).json(result[0]);
         } catch (error) {
             next(error);
         }        
-    };
+    });
 
-    const removeById = async(req: any, res: any, next: any) =>{
+    router.delete('/:id', async(req: any, res: any, next: any) =>{
          try {
             const result = await app.services.account.removeById(req.params.id);
             return res.status(204).send();
         } catch (error) {
             next(error);
         }        
-    };
+    });
 
-    return {createAcount, getAll, getById, updateById, removeById};
+    return router;
 } 

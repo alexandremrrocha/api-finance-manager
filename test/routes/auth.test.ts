@@ -42,7 +42,7 @@ test('Shouldnt authenticate user who doesnt exist', async () => {
 });
 
 test('Shouldnt access a protected route without a token', async () =>{
-  const res = await request(app).get('/users');
+  const res = await request(app).get('/v1/users');
   expect(res.status).toBe(401);
 });
 

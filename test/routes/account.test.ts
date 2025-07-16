@@ -2,7 +2,7 @@ import app from '../../src/app';
 import request from 'supertest';
 import * as jwt from 'jwt-simple';
 
-const MAIN_ROUTE: string = '/accounts';
+const MAIN_ROUTE: string = '/v1/accounts';
 let user: any;
 
 beforeAll(async () =>{

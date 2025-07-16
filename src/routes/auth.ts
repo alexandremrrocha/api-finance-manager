@@ -1,10 +1,13 @@
 import * as jwt from 'jwt-simple';
 import bcrypt from 'bcrypt';
+import express from "express";
 
 const secret = 'textoseguro'
 
 module.exports = (app: any) =>{
-    const signin = async (req: any, res: any, next: any) => {        
+    const router = express.Router();
+
+    router.post('/signin', async (req: any, res: any, next: any) => {        
         try {
             const user = await app.services.user.findUser({ email: req.body.email });            
             if(!user){
@@ -24,7 +27,16 @@ module.exports = (app: any) =>{
         } catch (error) {
             next(error);
         }                
-    };
+    });
 
-    return {signin};
+    router.post('/signup', async (req: any, res: any, next: any) =>{
+        try {
+            const result = await app.services.user.saveUser(req.body);
+            res.status(201).json(result[0]);
+        } catch (error: any) {
+            next(error);
+        }            
+    });
+
+    return router;
 };
