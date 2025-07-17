@@ -4,7 +4,6 @@ import knexfile from "../knexfile";
 
 const app: any = express();
 
-//TODO: criar chaveamento dinamico
 app.db = knex(knexfile.test)
 
 const consign = require('consign');

@@ -5,7 +5,7 @@ module.exports = (app: any) =>{
 
     router.post('/', async (req: any, res: any, next: any) =>{
         try {
-            const result = await app.services.account.saveAccount(req.body);
+            const result = await app.services.account.saveAccount({...req.body, user_id: req.user.id});
             return res.status(201).json(result[0]);      
         } catch (error: any) {
             next(error);
@@ -14,7 +14,7 @@ module.exports = (app: any) =>{
 
     router.get('/', async (req: any, res: any, next: any) =>{
         try {
-            const result = await app.services.account.getAll();
+            const result = await app.services.account.findByUserId(req.user.id);
             return res.status(200).json(result);
         } catch (error) {
             next(error);

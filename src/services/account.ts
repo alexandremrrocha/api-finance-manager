@@ -7,8 +7,8 @@ module.exports = (app: any) =>{
         return app.db('accounts').insert(account, '*')
     }
 
-    const getAll = () =>{
-        return app.db('accounts');
+    const findByUserId = (user_id: any) =>{
+        return app.db('accounts').where({user_id});
     };
 
     const find = (filter = {}) =>{
@@ -23,5 +23,5 @@ module.exports = (app: any) =>{
         return app.db('accounts').where({id}).delete();
     };
 
-    return {saveAccount, getAll, find, updateById, removeById}
+    return {saveAccount, find, updateById, removeById, findByUserId}
 }

@@ -4,16 +4,20 @@ import * as jwt from 'jwt-simple';
 
 const MAIN_ROUTE: string = '/v1/accounts';
 let user: any;
+let user2: any;
 
-beforeAll(async () =>{
-    const res = await app.services.user.saveUser({name: 'User Account', email: `${Date.now()}@email.com`, password: '123456'});
+beforeEach(async () =>{
+    const res = await app.services.user.saveUser({name: 'User Account #1', email: `${Date.now()}@email.com`, password: '123456'});
     user = {...res[0]};
     user.token = jwt.encode(user, 'textoseguro');
+    const res2 = await app.services.user.saveUser({name: 'User Account #2', email: `${Date.now()}@email.com`, password: '123456'});
+    user2 = {...res2[0]};
+    
 });
 
 test('Should insert account with success', async () =>{
     const res = await request(app).post(MAIN_ROUTE)
-        .send({name: '#Account 1', user_id: user.id})
+        .send({name: '#Account 1'})
         .set('authorization', `bearer ${user.token}`);
     expect(res.status).toBe(201);
     expect(res.body.name).toBe('#Account 1');
@@ -21,7 +25,7 @@ test('Should insert account with success', async () =>{
 
 test('It shouldnt insert an account without a name', async() =>{
     const res = await request(app).post(MAIN_ROUTE)
-        .send({user_id: user.id})
+        .send({})
         .set('authorization', `bearer ${user.token}`);
     expect(res.status).toBe(500);
     expect(res.body.message).toBe('Nome é um atributo obrigatório');
@@ -29,16 +33,18 @@ test('It shouldnt insert an account without a name', async() =>{
 
 test.skip('It shouldnt insert an account with duplicate name for the same user', async () =>{});
 
-test('Should list all accounts', async () =>{
-    await app.db('accounts').insert({name: 'Acc list', user_id: user.id});
+test('It should list just the user account', async () =>{ 
+    await app.db('accounts').insert([
+       { name: 'Account User #1', user_id: user.id },
+       { name: 'Account User #2', user_id: user2.id },
+    ]);
     const res = await request(app)
         .get(MAIN_ROUTE)
         .set('authorization', `bearer ${user.token}`);
     expect(res.status).toBe(200);
-    expect(res.body.length).toBeGreaterThan(0);
+    expect(res.body.length).toBe(1);
+    expect(res.body[0].name).toBe('Account User #1');
 });
-
-test.skip('It should list just the user account', async () =>{});
 
 test('Should return a account for Id', async () =>{
     const resultInsert = await app.db('accounts').insert({name: 'Acc by id', user_id: user.id}, ['id']);
