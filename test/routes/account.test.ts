@@ -31,7 +31,15 @@ test('It shouldnt insert an account without a name', async() =>{
     expect(res.body.message).toBe('Nome é um atributo obrigatório');
 });
 
-test.skip('It shouldnt insert an account with duplicate name for the same user', async () =>{});
+test('It shouldnt insert an account with duplicate name for the same user', async () =>{
+    await app.db('accounts').insert({name: "Account duplicada", user_id: user.id});
+    const res = await request(app)
+        .post(MAIN_ROUTE)
+        .set('authorization', `bearer ${user.token}`)
+        .send({name: "Account duplicada"});
+    expect(res.status).toBe(500);
+    expect(res.body.message).toBe('Já existe uma conta com esse nome');
+});
 
 test('It should list just the user account', async () =>{ 
     await app.db('accounts').insert([
@@ -56,7 +64,14 @@ test('Should return a account for Id', async () =>{
     expect(res.body.user_id).toBe(user.id);
 });
 
-test.skip('It shouldnt return an account of another user', async () =>{});
+test('It shouldnt return an account of another user', async () =>{
+    const account = await app.db('accounts').insert({name: "Acc User #2", user_id: user2.id}, ['id']);
+    const res = await request(app)
+        .get(`${MAIN_ROUTE}/${account[0].id}`)
+        .set('authorization', `bearer ${user.token}`);
+    expect(res.status).toBe(403);
+    expect(res.body.message).toBe('Este recurso não pertence ao usuário');    
+});
 
 test('Should alter an account', async () =>{
     const insertAccount = await app.db('accounts').insert({name: 'Acc to Update', user_id: user.id}, ['id']);    

@@ -24,6 +24,9 @@ module.exports = (app: any) =>{
     router.get('/:id', async (req: any, res: any, next: any) =>{
          try {
             const result = await app.services.account.find({id: req.params.id});
+            if(result.user_id != req.user.id){
+                return res.status(403).json({message: 'Este recurso não pertence ao usuário'});
+            }
             return res.status(200).json(result);
         } catch (error) {
             next(error);
