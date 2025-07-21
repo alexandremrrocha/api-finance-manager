@@ -22,7 +22,10 @@ app.get('/', (req: any, res: any) => {
 
 app.use((error: any, req: any, res: any, next: any) =>{
     const {name, message, stack} = error;
-    res.status(500).json({message, stack});
+    if(name == 'ForbiddenError'){
+        res.status(403).json({message});
+    }
+    res.status(500).json({name, message, stack});
     next(error);
 });
 

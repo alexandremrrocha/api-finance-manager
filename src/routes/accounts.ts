@@ -1,7 +1,16 @@
 import express from "express";
+import {ForbiddenError} from "../errors/ForbiddenError";
 
 module.exports = (app: any) =>{
     const router = express.Router();
+
+    router.param('id', async (req: any, res: any, next: any) =>{
+        const account = await app.services.account.find({id: req.params.id});
+        if(account.user_id == req.user.id){
+            return next();
+        }
+        throw new ForbiddenError('Este recurso não pertence ao usuário');
+    });
 
     router.post('/', async (req: any, res: any, next: any) =>{
         try {
