@@ -11,7 +11,7 @@ Durante o desenvolvimento desta API, aprofundei meus conhecimentos em:
 - Integração com banco de dados usando Knex.js
 - Boas práticas com TDD
 
-## Rodando localmente
+## 👨‍💻 Rodando localmente
 
 ```bash
 git clone https://github.com/alexandremrrocha/api-finance-manager.git
@@ -24,7 +24,7 @@ npm run dev
 - A aplicação estará disponível em http://localhost:4200
   - OBS: Não esqueça de preencher o "knexfile.ts" com as informações corretas
 
-## Rodando os testes
+## 🧑‍🔬 Rodando os testes
 
 ```bash  
   npm test
