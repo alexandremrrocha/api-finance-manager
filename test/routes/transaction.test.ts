@@ -41,6 +41,51 @@ test('Should list only the user transactions', async () =>{
     expect(res.body[0].description).toBe('T1');
 });
 
+test('Should insert a transaction with succes', async () =>{
+    const res = await request(app).post(MAIN_ROUTE)
+        .set('authorization', `bearer ${user.token}`)
+        .send({description: 'New T', date: new Date(), ammount: 100, type: 'I', acc_id: accountUser.id});
+    expect(res.status).toBe(201);
+    expect(res.body.acc_id).toBe(accountUser.id);
+});
+
+test('Should return a transaction by ID', async () =>{
+    const resTransactionInsert = await app.db('transactions')
+        .insert({description: 'T ID', date: new Date(), ammount: 100, type: 'I', acc_id: accountUser.id}, ['id']);
+    const resGetTransaction: any = await request(app).get(`${MAIN_ROUTE}/${resTransactionInsert[0].id}`)
+        .set('authorization', `bearer ${user.token}`)
+    expect(resGetTransaction.status).toBe(200);
+    expect(resGetTransaction.body.id).toBe(resTransactionInsert[0].id);
+    expect(resGetTransaction.body.description).toBe('T ID');    
+});
+
+test('Should alter a transactions', async () =>{
+    const resTransactionInsert = await app.db('transactions')
+        .insert({description: 'T update ID', date: new Date(), ammount: 100, type: 'I', acc_id: accountUser.id}, ['id']);
+    const resPatchTransaction: any = await request(app).patch(`${MAIN_ROUTE}/${resTransactionInsert[0].id}`)        
+        .set('authorization', `bearer ${user.token}`)
+        .send({description: "Updated"});
+    expect(resPatchTransaction.status).toBe(200);  
+    expect(resPatchTransaction.body.description).toBe('Updated');
+});
+
+test('Should delete a transaction', async () =>{
+    const resTransactionInsert = await app.db('transactions')
+        .insert({description: 'T deleted ID', date: new Date(), ammount: 100, type: 'I', acc_id: accountUser.id}, ['id']);
+    const resDeletedTransaction: any = await request(app).delete(`${MAIN_ROUTE}/${resTransactionInsert[0].id}`)        
+        .set('authorization', `bearer ${user.token}`)
+    expect(resDeletedTransaction.status).toBe(204);            
+});
+
+test('Shouldnt delete a transaction of another user', async () =>{
+    const resTransactionInsert = await app.db('transactions')
+        .insert({description: 'T deleted ID', date: new Date(), ammount: 100, type: 'I', acc_id: accountUser2.id}, ['id']);
+    const resDeletedTransaction: any = await request(app).delete(`${MAIN_ROUTE}/${resTransactionInsert[0].id}`)        
+        .set('authorization', `bearer ${user.token}`)
+    expect(resDeletedTransaction.status).toBe(403);    
+    expect(resDeletedTransaction.body.message).toBe('Este recurso não pertence ao usuário');        
+});
+
 afterAll(async () => {
   await app.db.destroy(); 
 });

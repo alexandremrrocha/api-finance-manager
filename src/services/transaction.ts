@@ -8,5 +8,28 @@ module.exports = (app: any) => {
             .select();
     }
 
-    return {find};
+    const findOne = (filter: any) =>{
+        return app.db('transactions')            
+            .where(filter)
+            .first();
+    }
+
+    const save = (transaction: any) => {
+        return app.db('transactions')
+            .insert(transaction, '*');
+    }
+
+    const update = (transaction: any, filter: any) =>{
+        return app.db('transactions')            
+            .where(filter)
+            .update(transaction, '*');
+    }
+
+    const remove = (filter: any) =>{
+        return app.db('transactions')            
+            .where(filter)
+            .delete();
+    }
+
+    return {find, findOne, save, update, remove};
 }
