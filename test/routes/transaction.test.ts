@@ -49,6 +49,46 @@ test('Should insert a transaction with succes', async () =>{
     expect(res.body.acc_id).toBe(accountUser.id);
 });
 
+test('Input transactions should be positive', async () =>{
+    const res = await request(app).post(MAIN_ROUTE)
+        .set('authorization', `bearer ${user.token}`)
+        .send({description: 'New T', date: new Date(), ammount: -100, type: 'I', acc_id: accountUser.id});
+    expect(res.status).toBe(201);
+    expect(res.body.acc_id).toBe(accountUser.id);
+    expect(res.body.ammount).toBe('100.00');
+});
+
+test('Output transactions should be positive', async () =>{
+    const res = await request(app).post(MAIN_ROUTE)
+        .set('authorization', `bearer ${user.token}`)
+        .send({description: 'New T', date: new Date(), ammount: 100, type: 'O', acc_id: accountUser.id});
+    expect(res.status).toBe(201);
+    expect(res.body.acc_id).toBe(accountUser.id);
+    expect(res.body.ammount).toBe('-100.00');
+});
+
+test('Shouldnt insert a transaction without description', async () =>{
+   const res = await request(app).post(MAIN_ROUTE)
+        .set('authorization', `bearer ${user.token}`)
+        .send({date: new Date(), ammount: 100, type: 'I', acc_id: accountUser.id}); 
+    expect(res.status).toBe(500);
+    expect(res.body.message).toBe('Descrição é um atributo obrigatório');
+
+});
+
+test('Shouldnt insert a transaction without value', async () =>{
+    const res = await request(app).post(MAIN_ROUTE)
+            .set('authorization', `bearer ${user.token}`)
+            .send({description: 'New T desc', date: new Date(), type: 'I', acc_id: accountUser.id}); 
+        expect(res.status).toBe(500);
+        expect(res.body.message).toBe('Valor é um atributo obrigatório');
+});
+
+test.skip('Shouldnt insert a transaction without date', async () =>{});
+test.skip('Shouldnt insert a transaction without account', async () =>{});
+test.skip('Shouldnt insert a transaction without type', async () =>{});
+test.skip('Shouldnt insert a transaction with type invalid', async () =>{});
+
 test('Should return a transaction by ID', async () =>{
     const resTransactionInsert = await app.db('transactions')
         .insert({description: 'T ID', date: new Date(), ammount: 100, type: 'I', acc_id: accountUser.id}, ['id']);

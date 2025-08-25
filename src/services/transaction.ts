@@ -15,8 +15,19 @@ module.exports = (app: any) => {
     }
 
     const save = (transaction: any) => {
+        if(!transaction.description){
+            throw new Error('Descrição é um atributo obrigatório');
+        }
+        if(!transaction.ammount){
+            throw new Error('Valor é um atributo obrigatório');
+        }
+        const newTransaction = {...transaction};
+        if((transaction.type == 'I' && transaction.ammount < 0) || 
+            (transaction.type == 'O' && transaction.ammount > 0)){
+            newTransaction.ammount *= -1;                
+        }
         return app.db('transactions')
-            .insert(transaction, '*');
+            .insert(newTransaction, '*');
     }
 
     const update = (transaction: any, filter: any) =>{
