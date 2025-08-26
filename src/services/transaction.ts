@@ -21,6 +21,18 @@ module.exports = (app: any) => {
         if(!transaction.ammount){
             throw new Error('Valor é um atributo obrigatório');
         }
+        if(!transaction.date){
+            throw new Error('Data é um atributo obrigatório');
+        }
+        if(!transaction.acc_id){
+            throw new Error('Conta é um atributo obrigatório');
+        }
+        if(!transaction.type){
+            throw new Error('Tipo é um atributo obrigatório');
+        }
+        if(!(transaction.type === 'I' || transaction.type === 'O')){
+            throw new Error('Tipo inválido');
+        }
         const newTransaction = {...transaction};
         if((transaction.type == 'I' && transaction.ammount < 0) || 
             (transaction.type == 'O' && transaction.ammount > 0)){

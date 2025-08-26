@@ -41,7 +41,7 @@ test('Should list only the user transactions', async () =>{
     expect(res.body[0].description).toBe('T1');
 });
 
-test('Should insert a transaction with succes', async () =>{
+test('Should insert a transaction with success', async () =>{
     const res = await request(app).post(MAIN_ROUTE)
         .set('authorization', `bearer ${user.token}`)
         .send({description: 'New T', date: new Date(), ammount: 100, type: 'I', acc_id: accountUser.id});
@@ -67,27 +67,44 @@ test('Output transactions should be positive', async () =>{
     expect(res.body.ammount).toBe('-100.00');
 });
 
-test('Shouldnt insert a transaction without description', async () =>{
-   const res = await request(app).post(MAIN_ROUTE)
-        .set('authorization', `bearer ${user.token}`)
-        .send({date: new Date(), ammount: 100, type: 'I', acc_id: accountUser.id}); 
-    expect(res.status).toBe(500);
-    expect(res.body.message).toBe('Descrição é um atributo obrigatório');
+describe('Try insert an invalid transaction', () =>{
+    let validTransaction: any;
+    beforeAll(() => {
+        validTransaction = {description: 'New T', date: new Date(), ammount: 100, type: 'I', acc_id: accountUser.id};
+    });
 
-});
-
-test('Shouldnt insert a transaction without value', async () =>{
-    const res = await request(app).post(MAIN_ROUTE)
+    const testTemplate = async (newData: any, errorMessage: string) =>{
+        const res = await request(app).post(MAIN_ROUTE)
             .set('authorization', `bearer ${user.token}`)
-            .send({description: 'New T desc', date: new Date(), type: 'I', acc_id: accountUser.id}); 
+            .send({...validTransaction, ...newData}); 
         expect(res.status).toBe(500);
-        expect(res.body.message).toBe('Valor é um atributo obrigatório');
-});
+        expect(res.body.message).toBe(errorMessage);
+    };
 
-test.skip('Shouldnt insert a transaction without date', async () =>{});
-test.skip('Shouldnt insert a transaction without account', async () =>{});
-test.skip('Shouldnt insert a transaction without type', async () =>{});
-test.skip('Shouldnt insert a transaction with type invalid', async () =>{});
+    test('Shouldnt insert without description', () =>{
+        testTemplate({description: null}, 'Descrição é um atributo obrigatório')
+    });
+
+    test('Shouldnt insert a transaction without value', () =>{
+        testTemplate({ammount: null}, 'Valor é um atributo obrigatório')            
+    });
+
+    test('Shouldnt insert a transaction without date', () =>{
+        testTemplate({date: null}, 'Data é um atributo obrigatório')            
+    });
+
+    test('Shouldnt insert a transaction without account', () =>{
+        testTemplate({acc_id: null}, 'Conta é um atributo obrigatório')                    
+    });
+
+    test('Shouldnt insert a transaction without type', () =>{
+        testTemplate({type: null}, 'Tipo é um atributo obrigatório')            
+    });
+
+    test('Shouldnt insert a transaction with type invalid', () =>{
+        testTemplate({type: 'A'}, 'Tipo inválido')            
+    });
+});
 
 test('Should return a transaction by ID', async () =>{
     const resTransactionInsert = await app.db('transactions')
