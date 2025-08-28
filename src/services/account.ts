@@ -1,3 +1,5 @@
+import { ValidationError } from "../errors/ValidationError";
+
 module.exports = (app: any) =>{
 
     const findByUserId = (user_id: any) =>{
@@ -10,10 +12,10 @@ module.exports = (app: any) =>{
 
     const saveAccount = async (account: any) =>{
         if(!account.name){
-            throw new Error('Nome é um atributo obrigatório');
+            throw new ValidationError('Nome é um atributo obrigatório');
         }
         if(await find({name: account.name, user_id: account.user_id})){
-            throw new Error('Já existe uma conta com esse nome');
+            throw new ValidationError('Já existe uma conta com esse nome');
         }      
         return app.db('accounts').insert(account, '*')
     }
@@ -22,7 +24,11 @@ module.exports = (app: any) =>{
         return app.db('accounts').where({id}).update(account, '*');
     };
 
-    const removeById = (id: any) =>{
+    const removeById = async (id: number) =>{
+        const transaction = await app.services.transaction.findOne({acc_id: id});
+        if(transaction){
+            throw new ValidationError('Essa conta possui transações associadas');
+        }
         return app.db('accounts').where({id}).delete();
     };
 

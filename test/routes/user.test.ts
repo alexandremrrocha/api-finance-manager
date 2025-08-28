@@ -43,7 +43,7 @@ test(`Shouldn't insert users without a name`, async () =>{
     const res = await request(app).post(MAIN_ROUTE)
         .send({email, password:'testeSemNome'})
         .set('authorization', `bearer ${user.token}`);
-    expect(res.status).toBe(500);
+    expect(res.status).toBe(400);
     expect(res.body.message).toBe('Nome é um atributo obrigatório')      
 });
 
@@ -51,7 +51,7 @@ test(`Shouldn't insert users without a email`, async () =>{
     const res = await request(app).post(MAIN_ROUTE)
         .send({name: 'Walter Mitty', password: '123456'})
         .set('authorization', `bearer ${user.token}`);
-    expect(res.status).toBe(500);
+    expect(res.status).toBe(400);
     expect(res.body.message).toBe('Email é um atributo obrigatório')      
 });
 
@@ -59,7 +59,7 @@ test(`Shouldn't insert users without a password`, async () =>{
     const res = await request(app).post(MAIN_ROUTE)
         .send({name: 'Walter Mitty', email})
         .set('authorization', `bearer ${user.token}`);
-    expect(res.status).toBe(500);
+    expect(res.status).toBe(400);
     expect(res.body.message).toBe('Senha é um atributo obrigatório')      
 });
 
@@ -67,7 +67,7 @@ test(`Shouldn't insert users with existing email addresses`, async () =>{
     const res = await request(app).post(MAIN_ROUTE)
         .send({name: 'Walter Mitty', email, password: '123456'})
         .set('authorization', `bearer ${user.token}`);
-    expect(res.status).toBe(500);
+    expect(res.status).toBe(400);
     expect(res.body.message).toBe('Já existe um usuário com esse email');
 });
 

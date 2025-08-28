@@ -1,4 +1,5 @@
 import bcrypt from 'bcrypt';
+import { ValidationError } from '../errors/ValidationError';
 
 module.exports = (app: any) =>{
     const findAll = () =>{
@@ -16,18 +17,18 @@ module.exports = (app: any) =>{
     
     const saveUser = async (user: any) =>{
         if(!user.name){
-            throw new Error('Nome é um atributo obrigatório');
+            throw new ValidationError('Nome é um atributo obrigatório');
         }    
         if(!user.password){
-             throw new Error('Senha é um atributo obrigatório');
+             throw new ValidationError('Senha é um atributo obrigatório');
         }  
         if(!user.email){
-             throw new Error('Email é um atributo obrigatório');
+             throw new ValidationError('Email é um atributo obrigatório');
         }
         
         const userDb = await findUser({email: user.email}); 
         if(userDb){
-             throw new Error('Já existe um usuário com esse email');
+             throw new ValidationError('Já existe um usuário com esse email');
         }
         
         const newUser = {...user};

@@ -55,7 +55,7 @@ module.exports = (app: any) => {
 
     router.delete('/:id', async (req: any, res, next) =>{
         try {
-            await app.services.transaction.remove({id: req.params.id});
+            await app.services.transaction.remove(req.params.id);
             
             return res.status(204).send();
         } catch (error) {

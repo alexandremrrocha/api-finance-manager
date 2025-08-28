@@ -27,7 +27,7 @@ test('It shouldnt insert an account without a name', async() =>{
     const res = await request(app).post(MAIN_ROUTE)
         .send({})
         .set('authorization', `bearer ${user.token}`);
-    expect(res.status).toBe(500);
+    expect(res.status).toBe(400);
     expect(res.body.message).toBe('Nome é um atributo obrigatório');
 });
 
@@ -37,7 +37,7 @@ test('It shouldnt insert an account with duplicate name for the same user', asyn
         .post(MAIN_ROUTE)
         .set('authorization', `bearer ${user.token}`)
         .send({name: "Account duplicada"});
-    expect(res.status).toBe(500);
+    expect(res.status).toBe(400);
     expect(res.body.message).toBe('Já existe uma conta com esse nome');
 });
 

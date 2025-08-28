@@ -1,6 +1,7 @@
 import * as jwt from 'jwt-simple';
 import bcrypt from 'bcrypt';
 import express from "express";
+import { ValidationError } from '../errors/ValidationError';
 
 const secret = 'textoseguro'
 
@@ -11,7 +12,7 @@ module.exports = (app: any) =>{
         try {
             const user = await app.services.user.findUser({ email: req.body.email });            
             if(!user){
-                throw new Error('Usuário ou senha incorreta');
+                throw new ValidationError('Usuário ou senha incorreta');
             }
             if(bcrypt.compareSync(req.body.password, user.password)){
                 const payload = {
@@ -22,7 +23,7 @@ module.exports = (app: any) =>{
                 const token = jwt.encode(payload, secret);
                 return res.status(200).json({ token });
             }else{                
-                throw new Error('Usuário ou senha incorreta');
+                throw new ValidationError('Usuário ou senha incorreta');
             }            
         } catch (error) {
             next(error);

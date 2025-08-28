@@ -77,7 +77,7 @@ describe('Try insert an invalid transaction', () =>{
         const res = await request(app).post(MAIN_ROUTE)
             .set('authorization', `bearer ${user.token}`)
             .send({...validTransaction, ...newData}); 
-        expect(res.status).toBe(500);
+        expect(res.status).toBe(400);
         expect(res.body.message).toBe(errorMessage);
     };
 
@@ -141,6 +141,15 @@ test('Shouldnt delete a transaction of another user', async () =>{
         .set('authorization', `bearer ${user.token}`)
     expect(resDeletedTransaction.status).toBe(403);    
     expect(resDeletedTransaction.body.message).toBe('Este recurso não pertence ao usuário');        
+});
+
+test('Shouldnt remove a account with transaction', async () =>{
+    await app.db('transactions')
+        .insert({description: 'T deleted ID', date: new Date(), ammount: 100, type: 'I', acc_id: accountUser.id});
+    const res: any = await request(app).delete(`/v1/accounts/${accountUser.id}`)        
+        .set('authorization', `bearer ${user.token}`)
+    expect(res.status).toBe(400); 
+    expect(res.body.message).toBe('Essa conta possui transações associadas');
 });
 
 afterAll(async () => {

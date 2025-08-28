@@ -24,8 +24,11 @@ app.use((error: any, req: any, res: any, next: any) =>{
     const {name, message, stack} = error;
     if(name == 'ForbiddenError'){
         res.status(403).json({message});
-    }
-    res.status(500).json({name, message, stack});
+    }else if(name == 'ValidationError'){
+        res.status(400).json({message});
+    }else{
+        res.status(500).json({name, message, stack});
+    }    
     next(error);
 });
 

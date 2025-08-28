@@ -1,3 +1,5 @@
+import { ValidationError } from "../errors/ValidationError";
+
 module.exports = (app: any) => {
 
     const find = (userId: number, filter = {}) =>{
@@ -16,22 +18,22 @@ module.exports = (app: any) => {
 
     const save = (transaction: any) => {
         if(!transaction.description){
-            throw new Error('Descrição é um atributo obrigatório');
+            throw new ValidationError('Descrição é um atributo obrigatório');
         }
         if(!transaction.ammount){
-            throw new Error('Valor é um atributo obrigatório');
+            throw new ValidationError('Valor é um atributo obrigatório');
         }
         if(!transaction.date){
-            throw new Error('Data é um atributo obrigatório');
+            throw new ValidationError('Data é um atributo obrigatório');
         }
         if(!transaction.acc_id){
-            throw new Error('Conta é um atributo obrigatório');
+            throw new ValidationError('Conta é um atributo obrigatório');
         }
         if(!transaction.type){
-            throw new Error('Tipo é um atributo obrigatório');
+            throw new ValidationError('Tipo é um atributo obrigatório');
         }
         if(!(transaction.type === 'I' || transaction.type === 'O')){
-            throw new Error('Tipo inválido');
+            throw new ValidationError('Tipo inválido');
         }
         const newTransaction = {...transaction};
         if((transaction.type == 'I' && transaction.ammount < 0) || 
@@ -48,9 +50,9 @@ module.exports = (app: any) => {
             .update(transaction, '*');
     }
 
-    const remove = (filter: any) =>{
+    const remove = async (id: number) =>{       
         return app.db('transactions')            
-            .where(filter)
+            .where({ id })
             .delete();
     }
 
