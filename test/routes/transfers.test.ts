@@ -59,13 +59,13 @@ test('Should create transactions for a transfer', async () => {
 test('Should not allow transfer with origin account from another user', async () => {
   const res = await postTransfer({ acc_ori_id: 10002 });
   expect(res.status).toBe(403);
-  expect(res.body.message).toBe('Este recurso nuo pertence ao usuorio');
+  expect(res.body.message).toBe('Este recurso não pertence ao usuário');
 });
 
 test('Should not allow transfer with destination account from another user', async () => {
   const res = await postTransfer({ acc_dest_id: 10003 });
   expect(res.status).toBe(403);
-  expect(res.body.message).toBe('Este recurso nuo pertence ao usuorio');
+  expect(res.body.message).toBe('Este recurso não pertence ao usuário');
 });
 
 test('Should not allow transfer with same origin and destination accounts', async () => {

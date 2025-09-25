@@ -51,7 +51,7 @@ module.exports = (app: any) => {
       throw new ValidationError('Conta de origem invalida');
     }
     if (originAccount.user_id !== transfer.user_id) {
-      throw new ForbiddenError('Este recurso nuo pertence ao usuorio');
+      throw new ForbiddenError('Este recurso não pertence ao usuário');
     }
 
     const destinationAccount = await app.services.account.find({ id: transfer.acc_dest_id });
@@ -59,7 +59,7 @@ module.exports = (app: any) => {
       throw new ValidationError('Conta de destino invalida');
     }
     if (destinationAccount.user_id !== transfer.user_id) {
-      throw new ForbiddenError('Este recurso nuo pertence ao usuorio');
+      throw new ForbiddenError('Este recurso não pertence ao usuário');
     }
 
     return { originAccount, destinationAccount };
