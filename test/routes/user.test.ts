@@ -3,11 +3,11 @@ import request from 'supertest';
 import * as jwt from 'jwt-simple';
 
 const MAIN_ROUTE: string = '/v1/users';
-const email: string = `${Date.now()}@email.com`;
+const generateUniqueEmail = () => `user_${Date.now()}_${Math.random().toString(36).slice(2)}@email.com`;
 
 let user: any;
 beforeAll(async () =>{
-    const res = await app.services.user.saveUser({name: 'User Account', email: `${Date.now()}@email.com`, password: '123456'});
+    const res = await app.services.user.saveUser({name: 'User Account', email: generateUniqueEmail(), password: '123456'});
     user = {...res[0]};
     user.token = jwt.encode(user, 'textoseguro');
 });
@@ -19,6 +19,7 @@ test('Should list all users', async () =>{
 });
 
 test('Should insert users with sucess', async () =>{    
+    const email = generateUniqueEmail();
     const res = await request(app).post(MAIN_ROUTE)
         .send({name: 'Walter Mitty', email, password: '123456'})
         .set('authorization', `bearer ${user.token}`);
@@ -28,8 +29,9 @@ test('Should insert users with sucess', async () =>{
 });
 
 test('Should insert encrypted password', async () =>{ 
+    const email = generateUniqueEmail();
     const res = await request(app).post(MAIN_ROUTE)
-        .send({name: 'Walter Mitty', email: `${Date.now()}@email.com`, password: '123456'})
+        .send({name: 'Walter Mitty', email, password: '123456'})
         .set('authorization', `bearer ${user.token}`);
     expect(res.status).toBe(201);
 
@@ -40,6 +42,7 @@ test('Should insert encrypted password', async () =>{
 });
 
 test(`Shouldn't insert users without a name`, async () =>{
+    const email = generateUniqueEmail();
     const res = await request(app).post(MAIN_ROUTE)
         .send({email, password:'testeSemNome'})
         .set('authorization', `bearer ${user.token}`);
@@ -56,6 +59,7 @@ test(`Shouldn't insert users without a email`, async () =>{
 });
 
 test(`Shouldn't insert users without a password`, async () =>{
+    const email = generateUniqueEmail();
     const res = await request(app).post(MAIN_ROUTE)
         .send({name: 'Walter Mitty', email})
         .set('authorization', `bearer ${user.token}`);
@@ -64,6 +68,8 @@ test(`Shouldn't insert users without a password`, async () =>{
 });
 
 test(`Shouldn't insert users with existing email addresses`, async () =>{
+    const email = generateUniqueEmail();
+    await app.services.user.saveUser({name: 'Existing user', email, password: '123456'});
     const res = await request(app).post(MAIN_ROUTE)
         .send({name: 'Walter Mitty', email, password: '123456'})
         .set('authorization', `bearer ${user.token}`);

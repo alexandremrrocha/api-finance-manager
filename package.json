@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "jest --watch --verbose=true",
+    "test": "jest --watch --runInBand --verbose=true",
     "dev": "nodemon --watch \"src/**/*.ts\" --ignore \"node_modules/**/*\" --exec ts-node src/server.ts",
     "knex": "ts-node -r tsconfig-paths/register ./node_modules/knex/bin/cli.js"
   },
