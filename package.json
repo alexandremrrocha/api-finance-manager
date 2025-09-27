@@ -6,12 +6,8 @@
     "test": "jest --watch --runInBand --verbose=true",
     "dev": "nodemon --watch \"src/**/*.ts\" --ignore \"node_modules/**/*\" --exec ts-node src/server.ts",
     "knex": "ts-node -r tsconfig-paths/register ./node_modules/knex/bin/cli.js",
-    "test:coverage": "jest --runInBand --coverage"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run test:coverage"
-    }
+    "test:coverage": "jest --runInBand --coverage",
+    "prepare": "husky"
   },
   "keywords": [],
   "author": "Alexandre Miranda Rezende Rocha",
