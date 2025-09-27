@@ -32,6 +32,14 @@ test('Should list just the user transfers', async () => {
   expect(res.body[0].description).toBe('Transfer #1');
 });
 
+test('Should return one transfer by ID', async () => {
+  const res = await request(app)
+    .get(`${MAIN_ROUTE}/10000`)
+    .set('authorization', `bearer ${TOKEN}`);
+  expect(res.status).toBe(200);  
+  expect(res.body.description).toBe('Transfer #1');
+});
+
 test('Should insert a transfer with success', async () => {
   const res = await postTransfer();
   expect(res.status).toBe(201);

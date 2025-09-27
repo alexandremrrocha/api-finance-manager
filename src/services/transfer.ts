@@ -9,6 +9,12 @@ module.exports = (app: any) => {
       .select();
   };
 
+  const findOne = (filter: any) => {    
+    return app.db('transfers')
+      .where(filter)
+      .first();
+  };
+
   const validateRequiredFields = (transfer: any) => {
     if (!transfer.description) {
       throw new ValidationError('Descricao e um atributo obrigatorio');
@@ -95,8 +101,8 @@ module.exports = (app: any) => {
       await trx('transactions').insert([creditTransaction, debitTransaction]);
 
       return result;
-    });
+    });    
   };
-
-  return { find, save };
+  
+  return { find, save, findOne};
 };
