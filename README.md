@@ -26,6 +26,20 @@ API RESTful para gestão de finanças pessoais construída com Node.js, Express 
 - Jest, Supertest, ts-jest, Husky (ganchos).
 - Winston para observabilidade.
 
+## Arquitetura em Alto Nível
+
+- Requisições HTTP entram pelo Express, passam pela camada de autenticação Passport/JWT e são direcionadas para serviços específicos.
+- A camada de serviços orquestra regras de negócio, interage com o banco via Knex e registra logs estruturados com Winston.
+
+```mermaid
+flowchart LR
+    Client[Cliente REST] -->|HTTP/JSON| API[Express Router]
+    API --> Auth[Passport JWT Middleware]
+    API --> Services[Camada de Serviços]
+    Services --> DB[(PostgreSQL via Knex)]
+    Services --> Logger[Winston Logger]
+```
+
 ## Executando Localmente
 
 ```bash
