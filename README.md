@@ -10,6 +10,7 @@ Durante o desenvolvimento desta API, aprofundei meus conhecimentos em:
 - Autenticação com Passport e JWT
 - Integração com banco de dados usando Knex.js
 - Boas práticas com TDD
+- Logs com Winston
 
 ## 👨‍💻 Rodando localmente
 
