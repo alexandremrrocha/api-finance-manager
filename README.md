@@ -97,7 +97,6 @@ npm test
 ## Próximos Passos (ideias)
 
 - Automatizar pipeline CI (GitHub Actions) com execução de testes e lint.
-- Documentar endpoints com Swagger/OpenAPI.
 - Implementar regras adicionais de negócio (ex.: limites de transferência, categorias de transações).
 
 ## Licença
